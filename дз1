@@ -1,0 +1,50 @@
+a = input()
+b = input()
+c = 0
+for i in range(len(a)):
+    if a[i] == b:
+        c += 1
+print('символ', a, 'встретился', c, 'раз(а)')
+
+v = input()
+if v.startswith('IMG_'):
+    print('файл начинается на IMG_')
+else:
+    print('Файл не начинается на IMG_')
+if v.endswith('.jpg') or v.endswith('.png'):
+    print('файл заканчивается на .jpg/.png')
+else:
+    print('Файл не заканчивается на .jpg/.png')
+t = "Автоматизация - это ключ к эффективности."
+
+p = t.find("ключ")
+print('позиция первого вхождения слова ключ:', p)
+
+
+a = input()
+print(a.strip())
+
+a = input()
+b = a.replace('-', '.')
+print(b)
+
+a = "/home/user/documents/report_final.docx"
+b = a.rfind('/')
+f = a[b + 1:]
+print(f)
+
+a = input()
+a.strip()
+j = 0
+for i in range(len(a)):
+    if a[i] == '@':
+        j += 1
+if j != 1:
+    print('ошибка')
+    exit()
+if a.endswith('.com') or a.endswith('.ru'):
+    print()
+else:
+    print('ошибка')
+    exit()
+print('ваш адрес корректный')
