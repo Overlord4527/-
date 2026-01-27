@@ -21,7 +21,7 @@ class Sim:
             print(f"{self.name} не выжержал суровой жизни и покинул чат.")
     def status(self):
         return f"{self.name} | Голод: {self.hunger} | энергия: {self.energy}"
-
+################################################################################################################
 class Human(Sim):
     def __init__(self, name, job):
         super().__init__(name)
@@ -39,6 +39,13 @@ class Human(Sim):
             pet.eat()
         else:
             print(f" у  {self.name} нет денег на корм! Иди работай!")
+    def feed_zombie(self, pet):
+        if self.money >= 25:
+            print(f"{self.name} покупает корм и кормит {zombie.name}...")
+            self.money -= 25
+            zombie.eat()
+        else:
+            print(f" у  {self.name} нет денег на еду! беги!!!!")
     def feed_pet_fish(self, pet_fish):
         if self.money >= 20:
             print(f"{self.name} покупает корм и кормит {pet_fish.name}...")
@@ -51,16 +58,35 @@ class Human(Sim):
         self.energy -= 20
         robot.energy = 100
         print(f"{robot.name} полностью заряжен!")
+##################################################################################################################
 class Dog(Sim):
     def eat(self):
         self.hunger += 30
-        print(f"{self.name} жадно грызет кость! Гав!")
+        print(f"🐶{self.name} жадно грызет кость! Гав!")
     def play(self,human):
         print(f"{self.name} приносит мячик {human.name}.")
         self.energy -= 20
         human.energy += 10
         print(f'{human.name} повеселел!')
+###############################################################################################################
+class Cat(Sim):
+    def __init__(self, name):
+        super().__init__(name)
+        self.lives = 9
 
+    def eat(self):
+        self.hunger += 30
+        print(f"🐈{self.name}: Мяу! Рыбка! ")
+    def play(self,human):
+        print(f"{self.name} играет с {human.name}.")
+        self.energy -= 20
+        human.energy += 10
+        print(f'{human.name} повеселел!')
+    def tear_sofa(self):
+        self.energy -= 10
+        print(f'🐈 {self.name} подрал диван, человек будет в ярости')
+
+###############################################################################################################
 class pet_fish(Sim):
     def eat(self):
         self.hunger += 20
@@ -71,6 +97,7 @@ class pet_fish(Sim):
         self.energy -= 15
         human.energy += 5
         print(f"{human.name} повеселел")
+##################################################################################################################
 class Robot(Sim):
     def __init__(self, name):
         super().__init__(name)
@@ -87,6 +114,21 @@ class Robot(Sim):
             human.eat()
         else:
             print(f"{self.name} : БАТАРЕЯ РАЗРЯЖЕНА. НЕ МОГУ ГОТОВИТЬ.")
+#############################################################################################################
+class Zombie(Sim):
+    def eat(self):
+        self.hunger += 30
+        print(f"{self.name} жадно ест еду")
+    def life_day(self):
+        self.hunger -= 10
+    def looking_for_food(self,human):
+        if self.energy > 20:
+            print(f"🧟‍{self.name} не обращяет внимания на {human.name}")
+        else:
+            print(f"🧟‍{self.name} атакует {human.name}")
+            human.energy -= 1000
+            zombie.hunger += 80
+#################################################################################################################
 class robot_vacuum_cleaner(Sim):
     def __init__(self, name):
         super().__init__(name)
@@ -104,12 +146,15 @@ class robot_vacuum_cleaner(Sim):
             print(f"{human.name} повеселел")
         else:
             print(f"{self.name} : БАТАРЕЯ РАЗРЯЖЕНА. НЕ МОГУ Убирать.")
+###############################################################################################################
 player = Human("Алекс", "Програмист")
 doggo = Dog("Бобик")
 pet_fish = pet_fish("Аркадий")
 robo = Robot("робо_дима")
 robot_vacuum_cleaner = robot_vacuum_cleaner("Элеонора Андреевна")
-household = [player, doggo, pet_fish, robo, robot_vacuum_cleaner]
+barsik = Cat("барсик")
+zombie = Zombie("Дэйв")
+household = [player, doggo, pet_fish, robo, robot_vacuum_cleaner, barsik, zombie]
 day = 1
 print("ДОБРО ПОЖАЛОВАТЬ В SIMS: PYTHON EDITION")
 while True:
@@ -135,6 +180,10 @@ while True:
     print("8. Поиграть с Аркадием")
     print("9. Попросить Элеонору Андреевну убрать дом (Бесплатно)")
     print("10. Починить Элеонору Андреевну")
+    print("11. Покормить Барсика (-20$ корм)")
+    print("12. Поиграть с Барсиком")
+    print("13.Барсик подрет диван")
+    print("14 покормить зомби")
     print("0. Выход")
     choice = input("Твой выбор")
     if choice == "1":
@@ -148,19 +197,27 @@ while True:
     elif choice == "3":
         player.feed_pet(doggo)
     elif choice == "4":
-        player.play(player)
+        doggo.play(player)
     elif choice == "5":
-        player.cook_dinner(player)
+        robo.cook_dinner(player)
     elif choice == "6":
         player.repair_robot(robo)
     elif choice == "7":
-        pet_fish.eat()
+        player.feed_pet(pet_fish)
     elif choice == "8":
         pet_fish.play(player)
     elif choice == "9":
-        player.cleans_the_house(player)
+        robot_vacuum_cleaner.cleans_the_house(player)
     elif choice == "10":
         player.repair_robot(robot_vacuum_cleaner)
+    elif choice == "11":
+        player.feed_pet(barsik)
+    elif choice == "12":
+        barsik.play(player)
+    elif choice == "13":
+        barsik.tear_sofa()
+    elif choice == "14":
+        player.feed_zombie(zombie)
     elif choice == "0":
         print("Пока!")
         break
