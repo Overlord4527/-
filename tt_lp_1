@@ -1,0 +1,23 @@
+clock = pg.time.Clock()
+
+while 1:
+    for i in pg.event.get():
+        if i.type == pg.QUIT:
+            pg.quit()
+            sys.exit()
+        
+        if i.type == pg.KEYUP and i.key == pg.K_s:
+            pg.image.save(sc, 'screenshot.png')
+
+    keys = pg.key.get_pressed()
+    # Движение с проверкой границ экрана
+    if keys[pg.K_LEFT] and sun_rect.left > 0:
+        sun_rect.x -= 5
+    if keys[pg.K_RIGHT] and sun_rect.right < W:
+        sun_rect.x += 5
+
+    sc.blit(bg, (0, 0))
+    sc.blit(sun, sun_rect)
+    pg.display.update()
+    
+    clock.tick(60)
