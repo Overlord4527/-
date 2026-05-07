@@ -1,0 +1,72 @@
+import pygame as pg
+import sys
+from random import randint
+
+pg.init()
+
+W, H = 400, 600
+sc = pg.display.set_mode((W, H))
+WHITE = (255, 255, 255)
+
+pg.time.set_timer(pg.USEREVENT, 1000)
+
+CARS = ('car1.png', 'car2.png', 'car3.png')
+CARS_SURF = []
+for name in CARS:
+    CARS_SURF.append(pg.image.load(name).convert_alpha())
+PLAYER_IMAGE = pg.image.load('player.png').convert_alpha()
+class Car(pg.sprite.Sprite):
+    def __init__(self, x, surf, group):
+        pg.sprite.Sprite.__init__(self)
+        self.image = surf
+        self.rect = self.image.get_rect(center=(x, -50)) 
+        self.speed = randint(3, 6) # Разная скорость
+        self.add(group)
+    def update(self):
+        if self.rect.y < H:
+            self.rect.y += self.speed
+        else:
+            self.kill() 
+class Player(pg.sprite.Sprite):
+    def __init__(self):
+        pg.sprite.Sprite.__init__(self)
+        self.image = PLAYER_IMAGE
+        self.rect = self.image.get_rect(center=(W // 2, H - 50))
+    def update(self):
+        keys = pg.key.get_pressed()
+        if keys[pg.K_LEFT] and self.rect.left > 0:
+            self.rect.x -= 5
+        if keys[pg.K_RIGHT] and self.rect.right < W:
+            self.rect.x += 5
+
+cars = pg.sprite.Group()
+player = Player()
+player_group = pg.sprite.GroupSingle(player)
+
+clock = pg.time.Clock()
+
+while True:
+    for event in pg.event.get():
+        if event.type == pg.QUIT:
+            pg.quit()
+            sys.exit()
+        elif event.type == pg.USEREVENT:
+            Car(randint(30, W - 30), CARS_SURF[randint(0, 2)], cars)
+
+
+    if pg.sprite.spritecollideany(player, cars):
+        print("Игра окончена!")
+        pg.quit()
+        sys.exit()
+
+
+    sc.fill(WHITE)
+    
+    cars.draw(sc)
+    player_group.draw(sc)
+    
+    cars.update()
+    player_group.update()
+    
+    pg.display.update()
+    clock.tick(60)
